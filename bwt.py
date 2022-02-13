@@ -14,8 +14,9 @@ class BurrowsWheeler :
     
     def __init__(self, sequence : str):
         """
+        Class constructor
         Args:
-            sequence(str): DNA sequence to be transformed by BWT matrix
+            sequence:str: DNA sequence to be transformed by BWT matrix
 
         """
         self.sequence= sequence.upper() + "$"
@@ -25,7 +26,7 @@ class BurrowsWheeler :
         method to obtain the BWT sequence using a BWT construction matrix
         
         Returns :
-            BWT sequence of the initial DNA sequence
+            str: The BWT result of the sequence
         
         """
         seq_len = len(self.sequence)
@@ -62,9 +63,9 @@ class BurrowsWheeler :
         reconstruction matrix
 
         Args:
-            bwt(str): sequence already transformed by BWT algorithm
+            bwt:str: sequence already transformed by BWT algorithm
         Returns:
-            initial DNA sequence
+            str: initial DNA sequence
 
         """
         # Initialization of the reconstruction matrix with a sorted BWT sequence
