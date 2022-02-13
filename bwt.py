@@ -13,8 +13,7 @@ class BurrowsWheeler :
 
     """Class of the transformation of Burrows-Wheeler"""
     
-    def __init__(self, sequence : str):
-        
+    def __init__(self, sequence : str):       
         """
         Args:
             sequence(str): DNA sequence to be transformed by BWT matrix
@@ -22,9 +21,7 @@ class BurrowsWheeler :
         """
         self.sequence= sequence.upper() + "$"
 
-
     def bwt_construction(self):
-
         """ 
         method to obtain the BWT sequence using a BWT construction matrix
         
@@ -32,7 +29,6 @@ class BurrowsWheeler :
             BWT sequence of the initial DNA sequence
         
         """
-
         seq_len = len(self.sequence)
         previous_sequence = self.sequence
         
@@ -60,22 +56,44 @@ class BurrowsWheeler :
         return bwt
     
     
-    def bwt_reconstruction (self, bwt : str):
+    def seq_reconstruction (self, bwt : str):
         
         """
-        method to obtain the original sequence from BWT sequence using a BWT 
+        method to obtain the original sequence from its BWT sequence using a sequence
         reconstruction matrix
         
         Args:
-            bwt(str): sequence already transformed by BWT algorithm.
+            bwt(str): sequence already transformed by BWT algorithm
         Returns:
             initial DNA sequence
 
         """
+        # Initialization of the sequence reconstruction matrix from a BWT sequence
         reconstruction_matrix=list(bwt)
-        reconstruction_matrix=sorted(reconstruction_matrix)
-        pass
+        reconstruction_matrix.sort()
         
+        
+        for i in range(0, len(bwt)-1, 1):
+            for j in range(0, len(bwt), 1):
+                reconstruction_matrix[j] = bwt[j] + reconstruction_matrix[j]
+
+            reconstruction_matrix.sort()
+            
+        for row in reconstruction_matrix :
+            if row[-1] == "$" :
+                sequence = row
+                break
+        
+        # return sequence.replace("$","")
+        print(sequence.replace("$",""))
+        
+        
+        
+if __name__ == "__main__" :
+    b=BurrowsWheeler("AAGTCA")
+    #b.bwt_construction()
+    b.seq_reconstruction("CT$AAG")
+
 
 
 
