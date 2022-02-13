@@ -68,17 +68,18 @@ class BurrowsWheeler :
             initial DNA sequence
 
         """
-        # Initialization of the sequence reconstruction matrix from a BWT sequence
+        # Initialization of the reconstruction matrix with a sorted BWT sequence
         reconstruction_matrix=list(bwt)
         reconstruction_matrix.sort()
         
-        
+        # Filling the reconstruction matrix
         for i in range(0, len(bwt)-1, 1):
             for j in range(0, len(bwt), 1):
                 reconstruction_matrix[j] = bwt[j] + reconstruction_matrix[j]
-
+            # Sort each line according to lexicographical order
             reconstruction_matrix.sort()
-            
+        
+        # Getting the line with '$' as last character
         for row in reconstruction_matrix :
             if row[-1] == "$" :
                 sequence = row
@@ -93,15 +94,5 @@ if __name__ == "__main__" :
     b=BurrowsWheeler("AAGTCA")
     #b.bwt_construction()
     b.seq_reconstruction("CT$AAG")
-
-
-
-
-
-
-
-
-
-
 
 
