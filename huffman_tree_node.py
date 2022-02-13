@@ -20,11 +20,14 @@ class TreeNode :
         """
         self.char = char
         self.value = value
+        # Node left of current node
         self.left = None
+        # Node right of current node
         self.right = None
+        # The tree direction
+        self.direction = ''
         
-    def is_leaf(self):
-        
+    def is_leaf(self):     
         """
             method to check if a node is a leaf or not
             a leaf is a single node with nothing on its right and left
