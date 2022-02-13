@@ -4,7 +4,8 @@
 
 @author: Aimen CHERIF
 
-The Burrows–Wheeler transform (BWT): the transformation permutes the order of the characters
+The Burrows–Wheeler transform (BWT): 
+    the transformation permutes the order of the characters
 
 """
 
@@ -16,7 +17,7 @@ class BurrowsWheeler :
         
         """
         Args:
-            sequence(str): DNA sequence to be transformed by BWT algorithm.
+            sequence(str): DNA sequence to be transformed by BWT matrix
 
         """
         self.sequence= sequence.upper() + "$"
@@ -24,7 +25,13 @@ class BurrowsWheeler :
 
     def bwt_construction(self):
 
-        """ The method to obtain the BWT sequence """
+        """ 
+        method to obtain the BWT sequence
+        
+        Returns :
+            BWT sequence of the initial DNA sequence
+        
+        """
 
         seq_len = len(self.sequence)
         previous_sequence = self.sequence
@@ -52,7 +59,22 @@ class BurrowsWheeler :
 
 
         return bwt
+    
+    
+    def bwt_reconstruction (self, bwt : str):
+        
+        """
+        method to obtain the original sequence from BWT using a BWT reconstruction
+        matrix
+        
+        Args:
+            bwt(str): sequence already transformed by BWT algorithm.
+        Returns:
+            initial DNA sequence
 
+        """
+        
+        pass
 
 
 
