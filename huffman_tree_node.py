@@ -7,7 +7,7 @@
 The Huffman binary tree implementation
 """
 
-class TreeNode :
+class HuffmanNode:
 
     """Class for tree node"""
  
@@ -36,10 +36,17 @@ class TreeNode :
         """
         return self.left is None and self.right is None
         
+
+class HuffmanTree:
+    """Class for Huffman's binary tree """
         
-        
-        
-        
+    def __init__(self, sequence: str):
+        """
+        Class constructor
+        Args:
+            sequence:str: representing the sequence to be encoded.
+        """      
+        self.sequence=sequence
         
         
         
