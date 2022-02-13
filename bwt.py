@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
 
+"""
 @author: Aimen CHERIF
 
 The Burrows–Wheeler transform (BWT): 
     the transformation permutes the order of the characters
-
 """
 
 class BurrowsWheeler :
 
     """Class of the transformation of Burrows-Wheeler"""
     
-    def __init__(self, sequence : str):       
+    def __init__(self, sequence : str):
         """
         Args:
             sequence(str): DNA sequence to be transformed by BWT matrix
@@ -59,9 +58,9 @@ class BurrowsWheeler :
     def seq_reconstruction (self, bwt : str):
         
         """
-        method to obtain the original sequence from its BWT sequence using a sequence
+        method to obtain the initial sequence from its BWT sequence using a sequence
         reconstruction matrix
-        
+
         Args:
             bwt(str): sequence already transformed by BWT algorithm
         Returns:
@@ -71,28 +70,19 @@ class BurrowsWheeler :
         # Initialization of the reconstruction matrix with a sorted BWT sequence
         reconstruction_matrix=list(bwt)
         reconstruction_matrix.sort()
-        
+
         # Filling the reconstruction matrix
         for i in range(0, len(bwt)-1, 1):
             for j in range(0, len(bwt), 1):
                 reconstruction_matrix[j] = bwt[j] + reconstruction_matrix[j]
             # Sort each line according to lexicographical order
             reconstruction_matrix.sort()
-        
+
         # Getting the line with '$' as last character
         for row in reconstruction_matrix :
             if row[-1] == "$" :
                 sequence = row
                 break
-        
-        # return sequence.replace("$","")
-        print(sequence.replace("$",""))
-        
-        
-        
-if __name__ == "__main__" :
-    b=BurrowsWheeler("AAGTCA")
-    #b.bwt_construction()
-    b.seq_reconstruction("CT$AAG")
 
-
+        sequence = sequence.replace("$","")
+        return sequence
