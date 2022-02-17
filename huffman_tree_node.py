@@ -17,6 +17,8 @@ class HuffmanNode:
         Args:
             char:str: Character to be treated by Huffman's algorithm
             value:int: The frequency of a character
+            left:Default:None: left child of the node
+            right:Default:None: right child of the node
         """
         self.char = char
         self.value = value
@@ -123,7 +125,7 @@ class HuffmanTree:
             bins:str: current binary code
         
         Returns:
-            codings:dict{str:int}: final dictionnary character and its binary code
+            char_codings:dict{str:int}: final dictionnary character and its binary code
         """
         char_codings={}
         # The path currently setted
