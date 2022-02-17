@@ -113,7 +113,7 @@ class HuffmanTree:
 
 
 
-    def char_codes(self, node: HuffmanNode, bins: str):
+    def char_codes(self, node: HuffmanNode, bins=''):
 
         """ A method to create the binary code according to its path in the Huffman 
             binary tree. Each character will have a binary code as a value in dictionnary.
@@ -125,8 +125,20 @@ class HuffmanTree:
         Returns:
             codings:dict{str:int}: final dictionnary character and its binary code
         """
-        coding={}
-        bin_char= bins + node.direction 
+        char_codings={}
+        # The path currently setted
+        bin_char= bins + node.direction
+
+        if node.left:
+            self.char_codes(node.left,bin_char) #recursion on the direction
+   
+        if node.right:
+            self.char_codes(node.right,bin_char) #recursion on the direction
+
+        if node is_leaf() :
+           char_codings[node.char]= bin_char #add the last character
+   
+        return char_codings
         
         
         
