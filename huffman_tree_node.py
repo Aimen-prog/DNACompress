@@ -135,7 +135,7 @@ class HuffmanTree:
         if node.right:
             self.char_codes(node.right,bin_char) #recursion on the direction
 
-        if node is_leaf() :
+        if node.is_leaf() :
            char_codings[node.char]= bin_char #add the last character
    
         return char_codings
