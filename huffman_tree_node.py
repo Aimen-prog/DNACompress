@@ -28,7 +28,8 @@ class HuffmanNode:
         self.right = right
         # The tree direction
         self.direction = ''
-        
+
+     
     def is_leaf(self):     
         """
             method to check if a node is a leaf or not
@@ -51,7 +52,7 @@ class HuffmanTree:
         self.sequence=sequence
         self.dict_frequency = self.frequency()
         self.char_codings={}
-        self.seq_bin = ''
+        self.seq_bin_coding = ''
         self.padding_count=0
         self.unicode= ''
 
@@ -147,9 +148,10 @@ class HuffmanTree:
         """
 
         for char in self.sequence:
-            self.seq_bin = self.seq_bin + self.char_codings[char]
-        print(self.seq_bin)
-
+            if char in self.char_codings.keys():
+                self.seq_bin_coding += self.char_codings[char]
+            else:
+                self.seq_bin_coding += self.char_codings['N']
 
     def padding_to_binary(self, seq_bin : str):
 
@@ -178,7 +180,7 @@ class HuffmanTree:
 
         """ A method that codes the binary sequence in 8-bits """
 
-        pad_seqbin = HuffmanTree.padding_to_binary(self.seq_bin)
+        pad_seqbin = HuffmanTree.padding_to_binary(self.seq_bin_coding)
 
         for bit in range(0, len(pad_seqbin), 8):
             byte = pad_seqbin[bit:bit+8]
@@ -216,9 +218,9 @@ class HuffmanTree:
     
     
 
-if __name__ == "__main__" :
-    h=HuffmanTree("AAGTCA")
-    h.sequence_to_binary()
+# if __name__ == "__main__" :
+#     h=HuffmanTree("GAAGTCA")
+#     h.sequence_to_binary()
     
     
     
