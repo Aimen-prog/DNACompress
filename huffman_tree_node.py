@@ -55,7 +55,7 @@ class HuffmanTree:
         self.padding_count=0
         self.unicode= ''
 
-    def frequency(self, sequence: str):
+    def frequency(self):
         
         """ 
         This method calculates the frequency of each character in the sequence
@@ -213,4 +213,13 @@ class HuffmanTree:
                     sequence += key
                     path = ""
         return sequence
+    
+    
+
+if __name__ == "__main__" :
+    h=HuffmanTree("AAGTCA")
+    h.frequency()
+    
+    
+    
 
