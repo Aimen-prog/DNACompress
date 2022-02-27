@@ -4,7 +4,7 @@
 
 @author: Aimen CHERIF
 
-The Huffman binary tree implementation
+The Huffman binary tree implementation with compression and decompression process
 """
 
 class HuffmanNode:
@@ -40,7 +40,7 @@ class HuffmanNode:
 
 
 class HuffmanTree:
-    """Class for Huffman's binary tree """
+    """Class for Huffman's binary tree: Compression + Decompression """
     
     def __init__(self, sequence: str):
         """
@@ -53,10 +53,9 @@ class HuffmanTree:
         self.char_codings={}
         self.seq_bin = ''
         self.padding_count=0
-        
-    
+        self.unicode= ''
 
-    def frequency(sequence: str):
+    def frequency(self, sequence: str):
         
         """ 
         This method calculates the frequency of each character in the sequence
@@ -140,7 +139,6 @@ class HuffmanTree:
             self.char_codings[node.char]= bin_char #add the last character
 
 
-
     def sequence_to_binary(self):
 
         """A method that transforms a whole sequence into a binary sequence according to 
@@ -153,33 +151,66 @@ class HuffmanTree:
             self.seq_bin = self.seq_bin + encoder[char]
 
 
-    def paddings_to_binary(seq_bin : str):
+    def padding_to_binary(self, seq_bin : str):
 
-        """ This method transforms a binary sequence by adding zeros (paddings) 
+        """ A method that transforms a binary sequence by adding zeros (padding) 
         to its end to make it divisible by 8 (sequence will be coded in 8-bits afterwards)
-        Also stores number of added zeros for decompression process.
+        Also stores number of added zeros as preparation for the decompression process.
 
         Args:
             seq_bin:str: binary sequence from original sequence
 
         Returns:
-            seq_bin:str: binary sequence after padding additions
+            str: the binary sequence after padding additions
         """
         # Count of the number of added zeros
-        paddings = 0
+        padding = 0
 
         while len(seq_bin) % 8 != 0:
             seq_bin = seq_bin + '0'
-            paddings += 1
+            padding += 1
 
-        self.padding_count = paddings
+        self.padding_count = padding
         return seq_bin
-    
 
 
+    def binary_to_unicode(self):
+
+        """ A method that codes the binary sequence in 8-bits """
+
+        pad_seqbin = HuffmanTree.padding_to_binary(self.seq_bin)
+
+        for bit in range(0, len(pad_seqbin), 8):
+            byte = pad_seqbin[bit:bit+8]
+            bin_code = int(byte, 2)
+            self.unicode += chr(bin_code)
 
 
+    def decompression(self, rebuilder:dict):
+        """ A method that decompresses the unicode sequence into the initial sequence 
+        
+        Args:
+            rebuilder:dict: dictionnary of characters and their corresponding paths
+        
+        Returns:
+            str: decompressed (initial) sequence
 
+        """ 
+        # Coverting unicode sequence to binary sequence
+        for char in self.unicode:
+            ord_char = ord(char)
+            binary_seq = '' + format(ord_char, '08b')
 
-
+        # Padding removal
+        binary_seq = binary_seq[:-self.padding_count]
+        
+        # Rebuilding the initial DNA sequence and returning it
+        sequence=''
+        for bins in binary_seq:
+            path = "" + bins
+            for key, value in rebuilder.items():
+                if value == path:
+                    sequence += key
+                    path = ""
+        return sequence
 
