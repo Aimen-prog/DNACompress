@@ -85,7 +85,7 @@ class HuffmanTree:
             HuffmanNode: The root node of the tree (first element of a list)
         """
         tree_leafs= []
-        for char, freq in dict_frequency.items() :
+        for char, freq in self.dict_frequency.items() :
             tree_leafs.append(HuffmanNode(char, freq))
         
         while len(tree_leafs)>1 :
@@ -94,7 +94,7 @@ class HuffmanTree:
             
             #merging the two first nodes :
             # The new frequency is the sum of both frequencies
-            new_freq = tree_leafs[0].data + tree_leafs[1].data
+            new_freq = tree_leafs[0].value + tree_leafs[1].value
             # The new character
             new_char = tree_leafs[0].char + tree_leafs[1].char
 
@@ -102,17 +102,20 @@ class HuffmanTree:
             root = HuffmanNode(new_char, new_freq, tree_leafs[0], tree_leafs[1])
             
             # Set 0 for the first direction
-            tree_list[0].direction = '0'
-            # Set 1 for the second direction
-            tree_leafs[1].direction = '1'
+            tree_leafs[0].direction = '0'
             # Delete from the list
             del tree_leafs[0]
-            del tree_leafs[1]
+            
+            # Set 1 for the second direction
+            tree_leafs[0].direction = '1'
+            # Delete from the list
+            del tree_leafs[0]
 
             # The new resulting root node added to the node list
             tree_leafs.append(root)
 
         return tree_leafs[0]
+
 
 
 
@@ -218,7 +221,7 @@ class HuffmanTree:
 
 if __name__ == "__main__" :
     h=HuffmanTree("AAGTCA")
-    h.frequency()
+    h.tree_implementation()
     
     
     
