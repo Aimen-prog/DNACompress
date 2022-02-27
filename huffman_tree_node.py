@@ -117,16 +117,14 @@ class HuffmanTree:
         return tree_leafs[0]
 
 
-
-
     def char_codes(self, node: HuffmanNode, bins=''):
 
         """ A method to create character's binary code according to its path in the Huffman 
             binary tree. Each character will have a binary code as a value in class's 
-            dictionary
+            dictionary char_codings
         Args:
             node:TreeNode: root of the tree
-            bins:str: current binary code
+            bins:str: current binary code- empty by default
         """
 
         # The path currently setted
@@ -148,10 +146,9 @@ class HuffmanTree:
         the path of each character of that sequence
         """
 
-        root_node = self.tree_implementation()
-        encoder = HuffmanTree.char_codes(root_node)
         for char in self.sequence:
-            self.seq_bin = self.seq_bin + encoder[char]
+            self.seq_bin = self.seq_bin + self.char_codings[char]
+        print(self.seq_bin)
 
 
     def padding_to_binary(self, seq_bin : str):
@@ -221,7 +218,7 @@ class HuffmanTree:
 
 if __name__ == "__main__" :
     h=HuffmanTree("AAGTCA")
-    h.tree_implementation()
+    h.sequence_to_binary()
     
     
     
