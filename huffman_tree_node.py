@@ -221,7 +221,4 @@ class HuffmanTree:
 # if __name__ == "__main__" :
 #     h=HuffmanTree("GAAGTCA")
 #     h.sequence_to_binary()
-    
-    
-    
 

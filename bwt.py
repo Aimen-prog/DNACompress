@@ -47,14 +47,14 @@ class BurrowsWheeler :
         
         # Sorting the BWT construction matrix
         construction_matrix_sorted= sorted(construction_matrix)
-        
+
         # Getting the BWT sequence as the accumulation of the last character of each row
         bwt = ""
         for row in construction_matrix_sorted :
             bwt+=row[-1]
 
         return bwt
-    
+
     
     def seq_reconstruction (self, bwt : str):
         
