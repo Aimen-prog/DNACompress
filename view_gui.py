@@ -21,8 +21,7 @@ from tkinter.messagebox import askquestion
 class View(Tk):
     def __init__(self, controller):
         """
-        View class's constructor
-            
+        View class's constructor          
         """    
         super().__init__()
         self.configure(bg='white smoke')
@@ -90,7 +89,7 @@ class View(Tk):
             
         """            
         Button(self, text="BWT encryption",command=self.bwt_encryption, width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=6,column=0,padx=70 ,sticky='w')
-        Button(self, text="Huffman compression",width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=6,padx=70,sticky='e')
+        Button(self, text="Huffman compression", command=self.bwt_decryption, width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=6,padx=70,sticky='e')
         
         Button(self, text="BWT decryption",width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=10,column=0,padx=70 ,sticky='w')
         Button(self, text="Huffman decompression",width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=10,padx=70,sticky='e')
@@ -127,14 +126,12 @@ class View(Tk):
                 for char in line:
                     if char != '\n':
                         self.sequence += char
-    
 
     def get_text_or_file(self):
         """ 
         A method to get content of sequence entered manually or file if selected
 
-        """
-        
+        """   
         if self.file is not None:
             return self.sequence
         else :
@@ -180,7 +177,7 @@ class View(Tk):
     def bwt_encryption(self):
         """ 
         A method to proceed the Burrows Wheeler Transform encryption from the input (text or file)
-        Asking for the pedagogical way (step by step) or not ( displaying final bwt sequence)
+        Asking for doing it in a pedagogical way (step by step) or not ( displaying final bwt sequence)
 
         """
         global inbox
@@ -193,7 +190,7 @@ class View(Tk):
         # Remove spaces and saving sequence as controller's property
         self.controller.sequence = content.strip()
         ask_quest = askquestion('Bwt encryption', 'Would you like to go step by step ?')
-        results_bwt = self.controller.bwt_encryption_step_by_step()
+        results_bwt = self.controller.bwt_encryption_steppers()
 
         # Getting bwt resulting sequence for the non pedagogic way
         bwt_sequence = results_bwt[1]
@@ -211,6 +208,8 @@ class View(Tk):
             # Saving process when choosing to get final sequence directly
             next_text.set('Save')
             next_button.configure(command= lambda : self.save_results(bwt_sequence))
+
+
 
     def get_next(self, inbox:str):
         """ 
@@ -255,6 +254,39 @@ class View(Tk):
             next_text.set('Save')
             next_button.configure(command= lambda : self.save_results(bwt_sequence))
 
+
+
+    def bwt_decryption(self):
+        """ 
+        A method to proceed the Burrows Wheeler Transform decryption from the input (text or file)
+        Asking for doing it in a pedagogical way (step by step) or not (displaying final sequence)
+
+        """
+        # Content of the file or manually entered sequence
+        content = self.get_text_or_file()
+        # Remove spaces and saving sequence as controller's property
+        self.controller.sequence = content.strip()
+        ask_quest = askquestion('Bwt decryption', 'Would you like to go step by step ?')
+        results_bwt = self.controller.bwt_encryption_steppers()
+
+        # Getting bwt resulting sequence for the non pedagogic way
+        bwt_sequence = results_bwt[1]
+
+        if ask_quest == 'yes':
+            inbox = 'Step 1: Rotations'
+            self.popup('BWT encryption')
+            self.insert_in_text_box(inbox)
+            next_button.configure(command=lambda:self.get_next(inbox))
+
+        else:  #only final result
+            self.popup('BWT encryption')
+            text = 'The final BWT sequence is:\n' + bwt_sequence
+            self.insert_in_text_box(text)
+            # Saving process when choosing to get final sequence directly
+            next_text.set('Save')
+            next_button.configure(command= lambda : self.save_results(bwt_sequence))
+
+TODO: finish decryption same logic a s encryption
 
     def save_results (self, seq: str):
         """ 

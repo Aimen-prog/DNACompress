@@ -30,9 +30,10 @@ class Controller:
         self.view.main()
 
 
-    def bwt_encryption_step_by_step(self):
+    def bwt_encryption_steppers(self):
         """
-        Method for 
+        Method to help the step by step bwt encryption by returning matrix as an addition
+        to the final bwt sequence
         
         Returns:
             bwt_unsorted_matrix, bwt_sequence:tuple: the unsorted matrix of bwt encryption 
@@ -43,6 +44,37 @@ class Controller:
         bwt_unsorted_matrix = self.BurrowsWheeler.bwt_construction_steppers
         bwt_sequence = self.BurrowsWheeler.bwt_construction(self.sequence)
         return (bwt_unsorted_matrix, bwt_sequence)
+
+
+    def bwt_decryption_steppers(self):
+        """
+        This method helps the step by step the Burrows Wheeler decryption. Same logic as encryption
+        steppers method
+        
+        Returns:
+            bwt_reconstruction_matrix, original_sequence:tuple: the matrix of bwt decryption for step
+            by step process and the final bwt sequence          
+        """
+        self.BurrowsWheeler.bwt_reconstruction(self.sequence) 
+        bwt_reconstruction_matrix = self.BurrowsWheeler.bwt_reconstruction_steppers
+        original_sequence = self.BurrowsWheeler.bwt_reconstruction(self.sequence)
+        return (bwt_reconstruction_matrix, original_sequence)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
           
            
