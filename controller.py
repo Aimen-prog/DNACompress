@@ -12,48 +12,36 @@ from view_gui import View
 from bwt import BurrowsWheeler
 from huffman_tree_node import HuffmanNode, HuffmanTree
 
-class Controller():
+class Controller:
     def __init__(self):
         self.view = View(self)
+        self.BurrowsWheeler = BurrowsWheeler(self)
+        self.sequence=''
+        self.count=0
 
     def start_view(self):
         """
-        Method interface visibility
+        Method for interface visibility
         """
         self.view.create_space()
+        self.view.create_field()
+        self.view.create_buttons()
+        self.view.menu()
         self.view.main()
-        
-    def seq_to_bwt(self) :
-        if self.view.get_value("Sequence") :
-            seq = f"{self.view.get_value('Sequence')}"
-            bt= BurrowsWheeler(seq)
-            bwt=bt.bwt_construction()
-            self.view.display_bwt_seq(bwt)
 
 
-    def button_press_handle(self, button_id):
-        """
-        Method for executing search() or delete() or insert() methods
-        """
-        print("[Controller][button_press_handle] "+ button_id)
+    def bwt_encryption_step_by_step(self):
+        self.BurrowsWheeler.bwt_construction(self.sequence)
+        bwt_unsorted_matrix = self.BurrowsWheeler.bwt_construction_steppers
+        bwt_sequence = self.BurrowsWheeler.bwt_construction(self.sequence)
+        return (bwt_unsorted_matrix, bwt_sequence)
 
-        if button_id == "Sequence to BWT":
-            self.seq_to_bwt()
-        elif button_id == "BWT to sequence":
-            pass
-        elif button_id == "Huffman compression":
-            pass
-        elif button_id == "Huffman decompression":
-            pass
-        elif button_id == "Full compression":
-            pass
-        elif button_id == "Full decompression":
-            pass
-                
+          
            
 if __name__ == "__main__":
     controller = Controller()
     controller.start_view()
+    controller.bwt_encryption_step_by_step()
 
 
 
