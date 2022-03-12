@@ -13,12 +13,17 @@ from tkinter import Menu, filedialog, Button
 from tkinter import Entry, Text, Scrollbar, messagebox
 from tkinter import Label, Toplevel, END
 from tkinter import StringVar
+from tkinter.filedialog import asksaveasfile
 from tkinter import PhotoImage
 from tkinter.messagebox import askquestion
 
 
 class View(Tk):
     def __init__(self, controller):
+        """
+        View class's constructor
+            
+        """    
         super().__init__()
         self.configure(bg='white smoke')
         self.title("DNACompress")
@@ -28,6 +33,9 @@ class View(Tk):
         self.text_box_content=''
 
     def create_space(self):
+        """
+        This method creates the space (image and labels) of the home page
+        """    
 
         logo = PhotoImage(file="DNACompress_logo.png")
         label = Label(self,image=logo,bg="white smoke")
@@ -47,6 +55,10 @@ class View(Tk):
 
 
     def create_field(self):
+        """
+        This method creates the text box and scrollbar of the home page
+            
+        """         
 
         # creating a text box and scrollbar for the input
         global text_box
@@ -64,10 +76,19 @@ class View(Tk):
 
 
     def get_input(self) :
+        """
+        This method is used to get the sequence entered manually from the user
+        Returns:
+            
+        """
         self.text_box_content += text_box.get(1.0, END)
         return self.text_box_content
 
-    def create_buttons(self):              
+    def create_buttons(self):  
+        """
+        This method creates the five buttons of the home page
+            
+        """            
         Button(self, text="BWT encryption",command=self.bwt_encryption, width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=6,column=0,padx=70 ,sticky='w')
         Button(self, text="Huffman compression",width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=6,padx=70,sticky='e')
         
@@ -78,8 +99,9 @@ class View(Tk):
 
 
     def menu(self):
-        """This method creates a menu bar that contains several tabs, each
-        tab gives access to a feature of the GUI. """
+        """
+        This method creates a menu bar that contains choose file tab
+        """
 
         menu_bar = Menu(self)
 
@@ -90,6 +112,10 @@ class View(Tk):
         self.config(menu=menu_bar)
         
     def open_and_get_file(self):
+        """
+        This method opens and gets the file content when selected by storing it in the class's
+        property sequence
+        """
 
         self.file = filedialog.askopenfilename(title="Select open file :",
                                               initialdir=os.getcwd()+"/data",
@@ -104,6 +130,11 @@ class View(Tk):
     
 
     def get_text_or_file(self):
+        """ 
+        A method to get content of sequence entered manually or file if selected
+
+        """
+        
         if self.file is not None:
             return self.sequence
         else :
@@ -116,15 +147,13 @@ class View(Tk):
         Args:
             title:str: the title of the toplevel window
         """
-        global top
-        global next_button
-
+        global top, next_button, next_text
         top = Toplevel()
         top.geometry("500x230")
         top.title(title)
-        next_button_text = StringVar()
-        next_button = Button(top, textvariable=next_button_text, bg='SlateBlue4', fg='white', height=2, width=20)
-        next_button_text.set('next')
+        next_text = StringVar()
+        next_button = Button(top, textvariable=next_text, bg='SlateBlue4', fg='white', height=2, width=20)
+        next_text.set('next')
         next_button.grid(row=4)
         
     def insert_in_text_box(self, inserted_object:str):
@@ -139,15 +168,13 @@ class View(Tk):
         yscrollbar = Scrollbar(top)
 
         # creating the text box
-        popup_text_box = Text(top, height=10, width=60 , yscrollcommand=yscrollbar.set)
-        
+        popup_text_box = Text(top, height=10, width=60 , yscrollcommand=yscrollbar.set)     
         popup_text_box.insert(END, inserted_object)
         popup_text_box.tag_configure('center', justify='center')
         popup_text_box.tag_add('center', 1.0, END)
         popup_text_box.grid(row=3)
         yscrollbar.place(in_=popup_text_box, relx=1, relheight=1)
         yscrollbar.config(command=popup_text_box.yview)
-
 
 
     def bwt_encryption(self):
@@ -177,12 +204,13 @@ class View(Tk):
             self.insert_in_text_box(inbox)
             next_button.configure(command=lambda:self.get_next(inbox))
 
-            
         else:  #only final result
             self.popup('BWT encryption')
             text = 'The final BWT sequence is:\n' + bwt_sequence
             self.insert_in_text_box(text)
-
+            # Saving process when choosing to get final sequence directly
+            next_text.set('Save')
+            next_button.configure(command= lambda : self.save_results(bwt_sequence))
 
     def get_next(self, inbox:str):
         """ 
@@ -222,7 +250,24 @@ class View(Tk):
                 col = str(index) + '.' + str(len(i) - 1)
                 popup_text_box.tag_add('color', col)
                 popup_text_box.tag_config('color', foreground='red')
-                index += 1 
+                index += 1
+            # Saving after the step by step method
+            next_text.set('Save')
+            next_button.configure(command= lambda : self.save_results(bwt_sequence))
+
+
+    def save_results (self, seq: str):
+        """ 
+        Method to save the results of each algorithm
+
+        Args:
+            seq:str: The result to to be saved in a file
+        """
+        file = asksaveasfile(initialdir=os.getcwd(), title="Select File", mode='w', defaultextension='.txt')
+        with open(file.name, 'w') as f:
+            f.write(seq)
+        messagebox.showinfo('Done', 'File saved successfully!')
+            
 
 
     def main(self):

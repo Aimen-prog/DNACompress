@@ -31,6 +31,14 @@ class Controller:
 
 
     def bwt_encryption_step_by_step(self):
+        """
+        Method for 
+        
+        Returns:
+            bwt_unsorted_matrix, bwt_sequence:tuple: the unsorted matrix of bwt encryption 
+            and the final bwt sequence
+            
+        """
         self.BurrowsWheeler.bwt_construction(self.sequence)
         bwt_unsorted_matrix = self.BurrowsWheeler.bwt_construction_steppers
         bwt_sequence = self.BurrowsWheeler.bwt_construction(self.sequence)

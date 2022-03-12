@@ -104,3 +104,9 @@ class BurrowsWheeler :
         return sequence
 
             
+
+            
+            
+            
+            
+            
