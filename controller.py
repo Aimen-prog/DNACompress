@@ -55,33 +55,20 @@ class Controller:
             bwt_reconstruction_matrix, original_sequence:tuple: the matrix of bwt decryption for step
             by step process and the final bwt sequence          
         """
-        self.BurrowsWheeler.bwt_reconstruction(self.sequence) 
+        self.BurrowsWheeler.seq_reconstruction(self.sequence) 
         bwt_reconstruction_matrix = self.BurrowsWheeler.bwt_reconstruction_steppers
-        original_sequence = self.BurrowsWheeler.bwt_reconstruction(self.sequence)
+        original_sequence = self.BurrowsWheeler.seq_reconstruction(self.sequence)
         return (bwt_reconstruction_matrix, original_sequence)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          
+  
            
 if __name__ == "__main__":
     controller = Controller()
     controller.start_view()
-    controller.bwt_encryption_step_by_step()
+    controller.bwt_encryption_steppers()
+    controller.bwt_decryption_steppers()
 
 
 

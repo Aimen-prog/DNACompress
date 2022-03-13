@@ -89,9 +89,9 @@ class View(Tk):
             
         """            
         Button(self, text="BWT encryption",command=self.bwt_encryption, width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=6,column=0,padx=70 ,sticky='w')
-        Button(self, text="Huffman compression", command=self.bwt_decryption, width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=6,padx=70,sticky='e')
+        Button(self, text="Huffman compression", width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=6,padx=70,sticky='e')
         
-        Button(self, text="BWT decryption",width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=10,column=0,padx=70 ,sticky='w')
+        Button(self, text="BWT decryption",command=self.bwt_decryption,width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=10,column=0,padx=70 ,sticky='w')
         Button(self, text="Huffman decompression",width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=10,padx=70,sticky='e')
         
         Button(self, text="Quit",width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=11, pady=15)
@@ -150,7 +150,7 @@ class View(Tk):
         top.title(title)
         next_text = StringVar()
         next_button = Button(top, textvariable=next_text, bg='SlateBlue4', fg='white', height=2, width=20)
-        next_text.set('next')
+        next_text.set('Next')
         next_button.grid(row=4)
         
     def insert_in_text_box(self, inserted_object:str):
@@ -182,8 +182,9 @@ class View(Tk):
         """
         global inbox
         global bwt_sequence
-        global content
         global results_bwt
+        global content
+
 
         # Content of the file or manually entered sequence
         content = self.get_text_or_file()
@@ -208,7 +209,6 @@ class View(Tk):
             # Saving process when choosing to get final sequence directly
             next_text.set('Save')
             next_button.configure(command= lambda : self.save_results(bwt_sequence))
-
 
 
     def get_next(self, inbox:str):
@@ -262,31 +262,64 @@ class View(Tk):
         Asking for doing it in a pedagogical way (step by step) or not (displaying final sequence)
 
         """
+        global original_sequence
+        global bwt_recon_matrix
+        global in_box
+
         # Content of the file or manually entered sequence
         content = self.get_text_or_file()
         # Remove spaces and saving sequence as controller's property
         self.controller.sequence = content.strip()
-        ask_quest = askquestion('Bwt decryption', 'Would you like to go step by step ?')
-        results_bwt = self.controller.bwt_encryption_steppers()
+        
+        # step by step decryption
+        ask_question = askquestion('Bwt decryption', 'Would you like to go step by step ?')
+        
 
-        # Getting bwt resulting sequence for the non pedagogic way
-        bwt_sequence = results_bwt[1]
+        # Getting bwt decryption resulting sequence for the non pedagogic way
+        original_sequence= self.controller.bwt_decryption_steppers()[1]
+        
+        
+        if ask_question == 'yes':
+            in_box = 'Step 1: Getting the BWT sequence: ' + self.controller.sequence +\
+                '\nStep2: Sorting the reconstruction matrix by lexicographical order' 
+            self.popup('BWT decryption')
+            self.insert_in_text_box(in_box)
+            next_button.configure(command=lambda:self.get_next_decryption(in_box)) 
 
-        if ask_quest == 'yes':
-            inbox = 'Step 1: Rotations'
-            self.popup('BWT encryption')
-            self.insert_in_text_box(inbox)
-            next_button.configure(command=lambda:self.get_next(inbox))
 
         else:  #only final result
-            self.popup('BWT encryption')
-            text = 'The final BWT sequence is:\n' + bwt_sequence
-            self.insert_in_text_box(text)
-            # Saving process when choosing to get final sequence directly
-            next_text.set('Save')
-            next_button.configure(command= lambda : self.save_results(bwt_sequence))
+            try :
+                self.popup('BWT decryption')
+                text = 'The sequence after the BWT decryption is:\n' + original_sequence.replace("$","").strip()
+                self.insert_in_text_box(text)
+                # Saving process when choosing to get final sequence directly
+                next_text.set('Save')
+                next_button.configure(command= lambda : self.save_results(original_sequence.replace("$","").strip()))
+            except BaseException:
+                self.insert_in_text_box("An Error has occured, Try again please!")
+                next_text.set('Help')
+                next_button.configure(command=lambda:self.possible_reasons())
 
-TODO: finish decryption same logic a s encryption
+
+    def get_next_decryption(self, inbox:str):
+        
+        # Getting the sorted reconstruction matrix of decryption
+        bwt_recon_matrix= self.controller.bwt_decryption_steppers()[0][1]
+        try :
+            inbox = ''
+            inbox += popup_text_box.get("1.0", END) + next(iter(bwt_recon_matrix))
+            self.insert_in_text_box(inbox)           
+            del bwt_recon_matrix[0]
+
+        except BaseException: 
+            inbox += popup_text_box.get("1.0", END) + \
+                '\nStep 3: Getting the sequence ending with $ symbol:' + \
+                    '\n'+ original_sequence + " ==> " + original_sequence.replace("$","").strip()
+            self.insert_in_text_box(inbox) 
+
+            # Saving after the step by step method
+            next_text.set('Save')
+            next_button.configure(command= lambda : self.save_results(original_sequence.replace("$","").strip()))
 
     def save_results (self, seq: str):
         """ 
@@ -299,8 +332,10 @@ TODO: finish decryption same logic a s encryption
         with open(file.name, 'w') as f:
             f.write(seq)
         messagebox.showinfo('Done', 'File saved successfully!')
-            
 
+
+    def possible_reasons(self):
+        messagebox.showwarning("Possible failure reasons", "- Empty input/file \n- Not a BWT format \n ($ symbol missing)")
 
     def main(self):
         print("[View] main")
@@ -308,7 +343,7 @@ TODO: finish decryption same logic a s encryption
 
 
 
-
+TODO: Remove only last dollar of the bwt decryption when saving nd displaying (using replace properly)
 
 
 

@@ -98,15 +98,4 @@ class BurrowsWheeler :
         for row in reconstruction_matrix :
             if row[-1] == "$" :
                 sequence = row
-                break
-
-        sequence = sequence.replace("$","")
-        return sequence
-
-            
-
-            
-            
-            
-            
-            
+                return sequence
