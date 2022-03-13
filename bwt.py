@@ -84,8 +84,7 @@ class BurrowsWheeler :
         reconstruction_matrix=list(bwt)
         reconstruction_matrix.sort()
         # Assign the sequence as the first step of reconstruction class's list
-        self.bwt_reconstruction_steppers.append(reconstruction_matrix)
-        
+        self.bwt_reconstruction_steppers.append(reconstruction_matrix)        
         # Filling the reconstruction matrix
         for i in range(0, len(bwt)-1, 1):
             for j in range(0, len(bwt), 1):

@@ -89,7 +89,7 @@ class View(Tk):
             
         """            
         Button(self, text="BWT encryption",command=self.bwt_encryption, width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=6,column=0,padx=70 ,sticky='w')
-        Button(self, text="Huffman compression", width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=6,padx=70,sticky='e')
+        Button(self, text="Huffman compression",command=self.huffman_compression, width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=6,padx=70,sticky='e')
         
         Button(self, text="BWT decryption",command=self.bwt_decryption,width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=10,column=0,padx=70 ,sticky='w')
         Button(self, text="Huffman decompression",width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=10,padx=70,sticky='e')
@@ -254,8 +254,6 @@ class View(Tk):
             next_text.set('Save')
             next_button.configure(command= lambda : self.save_results(bwt_sequence))
 
-
-
     def bwt_decryption(self):
         """ 
         A method to proceed the Burrows Wheeler Transform decryption from the input (text or file)
@@ -280,46 +278,68 @@ class View(Tk):
         
         
         if ask_question == 'yes':
-            in_box = 'Step 1: Getting the BWT sequence: ' + self.controller.sequence +\
-                '\nStep2: Sorting the reconstruction matrix by lexicographical order' 
+            in_box = 'Step 1: Getting the entered BWT sequence:\n' + self.controller.sequence +\
+                '\nStep 2: Sorting decryption matrix by lexicographical order:' 
             self.popup('BWT decryption')
             self.insert_in_text_box(in_box)
             next_button.configure(command=lambda:self.get_next_decryption(in_box)) 
 
-
         else:  #only final result
             try :
                 self.popup('BWT decryption')
-                text = 'The sequence after the BWT decryption is:\n' + original_sequence.replace("$","").strip()
+                text = 'The sequence after the BWT decryption is:\n' + original_sequence +\
+                    "\n==>The final sequence is:\n" + original_sequence.strip()[: -1]
                 self.insert_in_text_box(text)
                 # Saving process when choosing to get final sequence directly
                 next_text.set('Save')
-                next_button.configure(command= lambda : self.save_results(original_sequence.replace("$","").strip()))
+                next_button.configure(command= lambda : self.save_results(original_sequence.strip()[: -1]))
             except BaseException:
-                self.insert_in_text_box("An Error has occured, Try again please!")
+                self.insert_in_text_box("An Error has occured, please try again!")
                 next_text.set('Help')
                 next_button.configure(command=lambda:self.possible_reasons())
 
 
-    def get_next_decryption(self, inbox:str):
-        
+    def get_next_decryption(self, inbox:str): 
         # Getting the sorted reconstruction matrix of decryption
         bwt_recon_matrix= self.controller.bwt_decryption_steppers()[0][1]
+        # Next clicks
         try :
             inbox = ''
             inbox += popup_text_box.get("1.0", END) + next(iter(bwt_recon_matrix))
             self.insert_in_text_box(inbox)           
             del bwt_recon_matrix[0]
+        # Step 3 and Saving sequence
+        except BaseException:
 
-        except BaseException: 
             inbox += popup_text_box.get("1.0", END) + \
                 '\nStep 3: Getting the sequence ending with $ symbol:' + \
-                    '\n'+ original_sequence + " ==> " + original_sequence.replace("$","").strip()
-            self.insert_in_text_box(inbox) 
-
+                    '\n'+ original_sequence + "\n==>The final sequence is:\n" +\
+                        original_sequence.strip()[: -1]
+            self.insert_in_text_box(inbox)
+            
             # Saving after the step by step method
             next_text.set('Save')
-            next_button.configure(command= lambda : self.save_results(original_sequence.replace("$","").strip()))
+            next_button.configure(command= lambda : self.save_results(original_sequence.strip()[: -1]))
+
+
+    def huffman_compression(self):
+        print("start")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     def save_results (self, seq: str):
         """ 
@@ -334,16 +354,18 @@ class View(Tk):
         messagebox.showinfo('Done', 'File saved successfully!')
 
 
+
     def possible_reasons(self):
-        messagebox.showwarning("Possible failure reasons", "- Empty input/file \n- Not a BWT format \n ($ symbol missing)")
+        """ 
+        Method to help the user with a message about possible failure reasons in BWT decryption
+        process
+        """
+        messagebox.showinfo("Possible failure reasons", "- Empty input/file \n- Not a BWT format \n ($ symbol missing)")
 
     def main(self):
         print("[View] main")
         self.mainloop()
 
-
-
-TODO: Remove only last dollar of the bwt decryption when saving nd displaying (using replace properly)
 
 
 
