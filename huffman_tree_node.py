@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
 
+"""
 @author: Aimen CHERIF
 
 The Huffman binary tree implementation with compression and decompression process
@@ -29,7 +29,15 @@ class HuffmanNode:
         # The tree direction
         self.direction = ''
 
-     
+    def __str__(self):
+        if self.right is None and self.left is None:
+            return str(self.value)
+
+        return "Node(%s, freq=%s, right=%s, left=%s)"%(self.char,
+                                                        self.value,
+                                                        self.right,
+                                                        self.left)
+
     def is_leaf(self):     
         """
             method to check if a node is a leaf or not
@@ -61,21 +69,18 @@ class HuffmanTree:
         """ 
         This method calculates the frequency of each character in the sequence
         and stores it in a dictionary
-        
-        Args:
-            sequence:str: the sequence to be used
             
         Returns:
             dict:{str:int}: The key is the character and its value represents its frequency
         """ 
-        freq_char={}
-        for char in self.sequence:
-            if not char in freq_char :
-                freq_char[char] = 1
-            else :
-                freq_char[char] = freq_char[char] + 1
-        
-        return freq_char
+
+        frequency = {}
+        for char in self.sequence.upper():
+            if char in frequency.keys():
+                frequency[char] += 1
+            else:
+                frequency[char] = 1
+        return frequency
 
 
     def tree_implementation(self) :
@@ -85,6 +90,7 @@ class HuffmanTree:
         Returns:
             HuffmanNode: The root node of the tree (first element of a list)
         """
+
         tree_leafs= []
         for char, freq in self.dict_frequency.items() :
             tree_leafs.append(HuffmanNode(char, freq))
@@ -147,11 +153,9 @@ class HuffmanTree:
         the path of each character of that sequence
         """
 
-        for char in self.sequence:
+        for char in self.sequence.upper():
             if char in self.char_codings.keys():
                 self.seq_bin_coding += self.char_codings[char]
-            else:
-                self.seq_bin_coding += self.char_codings['N']
 
     def padding_to_binary(self, seq_bin : str):
 
@@ -180,7 +184,7 @@ class HuffmanTree:
 
         """ A method that codes the binary sequence in 8-bits """
 
-        pad_seqbin = HuffmanTree.padding_to_binary(self.seq_bin_coding)
+        pad_seqbin = self.padding_to_binary(self.seq_bin_coding)
 
         for bit in range(0, len(pad_seqbin), 8):
             byte = pad_seqbin[bit:bit+8]
@@ -215,10 +219,3 @@ class HuffmanTree:
                     sequence += key
                     path = ""
         return sequence
-    
-    
-
-# if __name__ == "__main__" :
-#     h=HuffmanTree("GAAGTCA")
-#     h.sequence_to_binary()
-

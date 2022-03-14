@@ -57,8 +57,7 @@ class View(Tk):
         """
         This method creates the text box and scrollbar of the home page
             
-        """         
-
+        """
         # creating a text box and scrollbar for the input
         global text_box
         yscrollbar = Scrollbar(self)
@@ -322,8 +321,54 @@ class View(Tk):
             next_button.configure(command= lambda : self.save_results(original_sequence.strip()[: -1]))
 
 
+
     def huffman_compression(self):
-        print("start")
+
+        # Content of the file or manually entered sequence
+        content = self.get_text_or_file()
+        # Remove spaces and saving sequence as controller's property
+        self.controller.sequence = content.strip()
+        
+        # step by step Huffman compression
+        ask_question = askquestion('Huffman compression', 'Would you like to go step by step ?')
+
+        # Getting result of Huffman compression for the non pedagogic way
+        huff_unicode= self.controller.huffman_compression_steppers()[1]
+    
+        if ask_question == 'yes':
+            in_box = 'Step 1: Getting the entered sequence:\n' + self.controller.sequence +\
+                '\nStep 2: Building Huffman binary tree:' 
+            self.popup('Huffmann Compression')
+            self.insert_in_text_box(in_box)
+            #next_button.configure(command=lambda:self.get_next_decryption(in_box))
+
+        else:  #only final result (unicode sequence)
+            try :
+                self.popup('Huffmann compression')
+                text = 'The sequence after the Huffmann compression is:\n' + huff_unicode
+                self.insert_in_text_box(text)
+                # Saving process when choosing to get final sequence directly
+                next_text.set('Save')
+                next_button.configure(command= lambda : self.save_results(huff_unicode))
+
+            except BaseException:
+                self.insert_in_text_box("An Error has occured, please try again!")
+                next_text.set('Help')
+                next_button.configure(command=lambda:self.possible_reasons())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

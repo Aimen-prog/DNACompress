@@ -18,6 +18,8 @@ class Controller:
         self.BurrowsWheeler = BurrowsWheeler(self)
         self.sequence=''
         self.count=0
+        self.huff = None
+        self.tree_bin=''
 
     def start_view(self):
         """
@@ -28,7 +30,6 @@ class Controller:
         self.view.create_buttons()
         self.view.menu()
         self.view.main()
-
 
     def bwt_encryption_steppers(self):
         """
@@ -48,11 +49,11 @@ class Controller:
 
     def bwt_decryption_steppers(self):
         """
-        This method helps the step by step the Burrows Wheeler decryption. Same logic as encryption
-        steppers method
+        This method helps the step by step the Burrows Wheeler decryption. 
+        Same logic as encryption steppers method's way
         
         Returns:
-            bwt_reconstruction_matrix, original_sequence:tuple: the matrix of bwt decryption for step
+            (bwt_reconstruction_matrix, original_sequence):tuple: the matrix of bwt decryption for step
             by step process and the final bwt sequence          
         """
         self.BurrowsWheeler.seq_reconstruction(self.sequence) 
@@ -61,15 +62,47 @@ class Controller:
         return (bwt_reconstruction_matrix, original_sequence)
 
 
+    def huffman_compression_steppers(self):
+        """
+        This method helps the step by step Huffman compression by calling all steps in order to be
+        exploited later.
+        Returns:
+              (binary_with_padding, unicode):tuple: Binary sequence with padding (if needed) and the final
+              unicode sequence of Huffman's compression'
+              
+        """
+        # Initialization
+        self.huff = HuffmanTree(self.sequence.upper())
+        
+        # Tree 
+        tree = self.huff.tree_implementation()
+        self.tree_bin= tree.__str__()
 
-  
+        # Binary
+        self.huff.char_codes(tree)
+        self.huff.sequence_to_binary()    
+        binary_no_pad=self.huff.seq_bin_coding 
+        
+        # Unicode
+        self.huff.padding_to_binary(self.huff.seq_bin_coding)
+        binary_with_padding= self.huff.padding_to_binary(self.huff.seq_bin_coding)
+        self.huff.binary_to_unicode()
+
+
+        char_codes = self.huff.char_codings     
+        unicode = self.huff.unicode
+        return (binary_with_padding, unicode)
+
+
+
+
            
 if __name__ == "__main__":
     controller = Controller()
     controller.start_view()
     controller.bwt_encryption_steppers()
     controller.bwt_decryption_steppers()
-
+    controller.huffman_compression_steppers()
 
 
 
