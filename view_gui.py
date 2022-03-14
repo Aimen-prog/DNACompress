@@ -91,7 +91,7 @@ class View(Tk):
         Button(self, text="Huffman compression",command=self.huffman_compression, width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=6,padx=70,sticky='e')
         
         Button(self, text="BWT decryption",command=self.bwt_decryption,width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=10,column=0,padx=70 ,sticky='w')
-        Button(self, text="Huffman decompression",width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=10,padx=70,sticky='e')
+        Button(self, text="Huffman decompression", command=self.huffman_decompression,width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=10,padx=70,sticky='e')
         
         Button(self, text="Quit",width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=11, pady=15)
 
@@ -179,12 +179,7 @@ class View(Tk):
         Asking for doing it in a pedagogical way (step by step) or not ( displaying final bwt sequence)
 
         """
-        global inbox
-        global bwt_sequence
-        global results_bwt
-        global content
-
-
+        global inbox, bwt_sequence, results_bwt, content
         # Content of the file or manually entered sequence
         content = self.get_text_or_file()
         # Remove spaces and saving sequence as controller's property
@@ -208,6 +203,9 @@ class View(Tk):
             # Saving process when choosing to get final sequence directly
             next_text.set('Save')
             next_button.configure(command= lambda : self.save_results(bwt_sequence))
+            # Coloring final BWT sequence
+            popup_text_box.tag_config("start", foreground="red")
+            popup_text_box.tag_add("start", "2.0", END)
 
 
     def get_next(self, inbox:str):
@@ -277,8 +275,8 @@ class View(Tk):
         
         
         if ask_question == 'yes':
-            in_box = 'Step 1: Getting the entered BWT sequence:\n' + self.controller.sequence +\
-                '\nStep 2: Sorting decryption matrix by lexicographical order:' 
+            in_box = 'Recuperating the BWT entered sequence..\n' + self.controller.sequence +\
+                '\n\nStep 1: Sorting decryption matrix by lexicographical order:' 
             self.popup('BWT decryption')
             self.insert_in_text_box(in_box)
             next_button.configure(command=lambda:self.get_next_decryption(in_box)) 
@@ -287,16 +285,20 @@ class View(Tk):
             try :
                 self.popup('BWT decryption')
                 text = 'The sequence after the BWT decryption is:\n' + original_sequence +\
-                    "\n==>The final sequence is:\n" + original_sequence.strip()[: -1]
+                    "\n\n==>The final sequence is:\n" + original_sequence.strip()[: -1]
                 self.insert_in_text_box(text)
                 # Saving process when choosing to get final sequence directly
                 next_text.set('Save')
                 next_button.configure(command= lambda : self.save_results(original_sequence.strip()[: -1]))
+                # Coloring final sequence
+                popup_text_box.tag_config("start", foreground="red")
+                popup_text_box.tag_add("start", "5.0", END)
+                
+                #Error message
             except BaseException:
                 self.insert_in_text_box("An Error has occured, please try again!")
                 next_text.set('Help')
-                next_button.configure(command=lambda:self.possible_reasons())
-
+                next_button.configure(command=lambda:self.possible_reasons_bwt())
 
     def get_next_decryption(self, inbox:str): 
         # Getting the sorted reconstruction matrix of decryption
@@ -311,7 +313,7 @@ class View(Tk):
         except BaseException:
 
             inbox += popup_text_box.get("1.0", END) + \
-                '\nStep 3: Getting the sequence ending with $ symbol:' + \
+                '\nStep 2: Getting the sequence ending with $ symbol:' + \
                     '\n'+ original_sequence + "\n==>The final sequence is:\n" +\
                         original_sequence.strip()[: -1]
             self.insert_in_text_box(inbox)
@@ -321,9 +323,10 @@ class View(Tk):
             next_button.configure(command= lambda : self.save_results(original_sequence.strip()[: -1]))
 
 
-
     def huffman_compression(self):
-
+        
+        # Result will be stocked here in global for next method
+        global huff_unicode 
         # Content of the file or manually entered sequence
         content = self.get_text_or_file()
         # Remove spaces and saving sequence as controller's property
@@ -333,28 +336,51 @@ class View(Tk):
         ask_question = askquestion('Huffman compression', 'Would you like to go step by step ?')
 
         # Getting result of Huffman compression for the non pedagogic way
-        huff_unicode= self.controller.huffman_compression_steppers()[1]
+        huff_unicode= self.controller.huffman_compression_steppers()[3]
     
         if ask_question == 'yes':
-            in_box = 'Step 1: Getting the entered sequence:\n' + self.controller.sequence +\
-                '\nStep 2: Building Huffman binary tree:' 
+            # Getting the tree as a str from controller
+            huff_tree= self.controller.huffman_compression_steppers()[0]
+            in_box = 'Recuperating the entered sequence..\n' + self.controller.sequence +\
+                '\nStep 1: Building Huffman binary tree:\n\n' + huff_tree
+               
             self.popup('Huffmann Compression')
             self.insert_in_text_box(in_box)
-            #next_button.configure(command=lambda:self.get_next_decryption(in_box))
+            next_button.configure(command=lambda:self.get_next_huff(in_box))
 
         else:  #only final result (unicode sequence)
             try :
                 self.popup('Huffmann compression')
-                text = 'The sequence after the Huffmann compression is:\n' + huff_unicode
+                text = 'The unicode resulted from the Huffmann compression is:\n' + huff_unicode
                 self.insert_in_text_box(text)
                 # Saving process when choosing to get final sequence directly
                 next_text.set('Save')
                 next_button.configure(command= lambda : self.save_results(huff_unicode))
+                # Coloring final Huffmann unicode
+                popup_text_box.tag_config("start", foreground="red")
+                popup_text_box.tag_add("start", "2.0", END)
 
             except BaseException:
                 self.insert_in_text_box("An Error has occured, please try again!")
-                next_text.set('Help')
-                next_button.configure(command=lambda:self.possible_reasons())
+                next_text.set('')
+
+
+    def get_next_huff(self, inbox:str): 
+        # Getting binary code with potential padding from Huffman compression: the pedagogic way
+        huff_binary_no_pad = self.controller.huffman_compression_steppers()[1]        
+        huff_binary_pad = self.controller.huffman_compression_steppers()[2]       
+
+        inbox +='\n\nStep 2: The corresponding binary sequence with no padding:\n' + huff_binary_no_pad + \
+            "\n\nStep 3: Binary sequence after possible padding addition :\n" + huff_binary_pad +\
+                '\n\nStep 4: Translating to unicode (final result):\n' + huff_unicode
+        self.insert_in_text_box(inbox)            
+        # Saving after the step by step method
+        next_text.set('Save')
+        next_button.configure(command= lambda : self.save_results(huff_unicode))
+        
+        
+    def huffman_decompression(self):
+        print("compress")
 
 
 
@@ -399,13 +425,14 @@ class View(Tk):
         messagebox.showinfo('Done', 'File saved successfully!')
 
 
-
-    def possible_reasons(self):
+    def possible_reasons_bwt(self):
         """ 
         Method to help the user with a message about possible failure reasons in BWT decryption
         process
         """
         messagebox.showinfo("Possible failure reasons", "- Empty input/file \n- Not a BWT format \n ($ symbol missing)")
+        
+
 
     def main(self):
         print("[View] main")

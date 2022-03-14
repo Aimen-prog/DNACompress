@@ -19,7 +19,6 @@ class Controller:
         self.sequence=''
         self.count=0
         self.huff = None
-        self.tree_bin=''
 
     def start_view(self):
         """
@@ -67,8 +66,9 @@ class Controller:
         This method helps the step by step Huffman compression by calling all steps in order to be
         exploited later.
         Returns:
-              (binary_with_padding, unicode):tuple: Binary sequence with padding (if needed) and the final
-              unicode sequence of Huffman's compression'
+              (tree_bin, binary_no_pad, binary_with_padding, unicode):tuple: tree as string,
+              Binary sequence without padding, with padding (if needed) and the final
+              unicode sequence of Huffman's compression
               
         """
         # Initialization
@@ -76,13 +76,13 @@ class Controller:
         
         # Tree 
         tree = self.huff.tree_implementation()
-        self.tree_bin= tree.__str__()
+        tree_bin= tree.__str__()
 
         # Binary
         self.huff.char_codes(tree)
         self.huff.sequence_to_binary()    
         binary_no_pad=self.huff.seq_bin_coding 
-        
+    
         # Unicode
         self.huff.padding_to_binary(self.huff.seq_bin_coding)
         binary_with_padding= self.huff.padding_to_binary(self.huff.seq_bin_coding)
@@ -91,9 +91,7 @@ class Controller:
 
         char_codes = self.huff.char_codings     
         unicode = self.huff.unicode
-        return (binary_with_padding, unicode)
-
-
+        return (tree_bin, binary_no_pad, binary_with_padding, unicode)
 
 
            
