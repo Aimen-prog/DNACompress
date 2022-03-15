@@ -25,6 +25,7 @@ class Controller:
         """
         Method for interface visibility
         """
+        self.view.protocol("WM_DELETE_WINDOW", self.quit_program)
         self.view.create_space()
         self.view.create_field()
         self.view.create_buttons()
@@ -110,6 +111,8 @@ class Controller:
         self.huff = HuffmanTree("")     
         # Binary sequence processing         
         self.huff.get_binary_from_unicode(self.unicode_seq, rebuilder)
+        
+        self.huff.sequence_to_binary()
         # Binary sequence pad    
         bins_pad = self.huff.binary_seq
         # Binary sequence no padding
@@ -121,7 +124,11 @@ class Controller:
         return (bins_pad, bins, binary_to_sequence)
 
 
-
+    def quit_program(self):
+        """
+        Method that calls "quit_secure" for quit program confirmation
+        """
+        self.view.quit_secure()
            
 if __name__ == "__main__":
     controller = Controller()

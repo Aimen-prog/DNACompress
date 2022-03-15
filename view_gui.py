@@ -17,8 +17,7 @@ from tkinter import Label, Toplevel, END
 from tkinter import StringVar
 from tkinter.filedialog import asksaveasfile
 from tkinter import PhotoImage
-from tkinter.messagebox import askquestion
-
+from tkinter.messagebox import askquestion, askokcancel
 
 class View(Tk):
     def __init__(self, controller):
@@ -93,9 +92,9 @@ class View(Tk):
         Button(self, text="Huffman compression",command=self.huffman_compression, width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=6,padx=70,sticky='e')
         
         Button(self, text="BWT decryption",command=self.bwt_decryption,width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=10,column=0,padx=70 ,sticky='w')
-        Button(self, text="Huffman decompression", command=self.huffman_decompression,width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=10,padx=70,sticky='e')
+        Button(self, text="Huffman decompression", command=self.huffman_decompression, width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=10,padx=70,sticky='e')
         
-        Button(self, text="Quit",width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=11, pady=15)
+        Button(self, text="Reset", command=self.reset_entries, width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=11, pady=15)
 
 
     def menu(self):
@@ -453,6 +452,16 @@ class View(Tk):
             f.write(dict_str + '\n' + seq)
         messagebox.showinfo('Done', 'File saved successfully!')
 
+    def reset_entries(self):
+        """ 
+        Method to help the user reset entries file/text box content
+        """
+        text_box.delete(1.0, END)
+        self.controller.sequence=""
+        self.file = None
+        if self.file is None :
+            self.input_deselection()
+            
 
     def possible_reasons_bwt(self):
         """ 
@@ -461,7 +470,19 @@ class View(Tk):
         """
         messagebox.showinfo("Possible failure reasons", "- Empty input/file \n- Not a BWT format \n ($ symbol missing)")
         
-
+    def quit_secure(self):
+        """ 
+        Method quit the program properly
+        """
+        response = messagebox.askokcancel("Quit", "Are you sure you want to quit?")
+        if response:
+            self.destroy()
+    
+    def input_deselection(self):
+        """ 
+        Method to display a message when a file is deselected (reset button)
+        """
+        messagebox.showinfo("Reset done", "Input dropped.\nAll clear!")       
 
     def main(self):
         print("[View] main")

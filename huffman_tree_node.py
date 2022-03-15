@@ -172,7 +172,6 @@ class HuffmanTree:
         """
         # Count of the number of added zeros
         padding = 0
-
         while len(seq_bin) % 8 != 0:
             seq_bin = seq_bin + '0'
             padding += 1
@@ -203,15 +202,15 @@ class HuffmanTree:
             rebuilder:dict: the rebuilder dict that contains informations about
             character encodings and especially paddings for removal
         """
-
         # Coverting unicode sequence to binary sequence
         for char in unicode:
             ord_char = ord(char)
             self.binary_seq = '' + format(ord_char, '08b')
         # Padding removal
-        pads = rebuilder["padding_count"]   
-        self.binary_seq_nopad = self.binary_seq[:-pads]
-
+        pads = rebuilder["padding_count"]
+        # Only if there are paddings, if not do nothing!
+        if pads !=0 :
+            self.binary_seq_nopad = self.binary_seq[:-pads]
 
     def decompression(self, rebuilder:dict):
         """ A method that decompresses the unicode sequence into the initial sequence 
