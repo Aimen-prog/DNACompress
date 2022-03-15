@@ -216,6 +216,8 @@ class HuffmanTree:
         # Only if there are paddings, if not do nothing!
         if pads !=0 :
             self.binary_seq_nopad = binary[:-pads]
+        else:
+            self.binary_seq_nopad = binary
 
     def decompression(self, rebuilder:dict):
         """ A method that decompresses the unicode sequence into the initial sequence 
