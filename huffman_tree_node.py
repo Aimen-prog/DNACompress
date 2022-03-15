@@ -37,7 +37,6 @@ class HuffmanNode:
                                                         self.value,
                                                         self.right,
                                                         self.left)
-
     def is_leaf(self):     
         """
             method to check if a node is a leaf or not
@@ -59,16 +58,16 @@ class HuffmanTree:
         """      
         self.sequence=sequence
         self.dict_frequency = self.frequency()
-        self.char_codings={}
-        self.seq_bin_coding = ''   #for the binary sequence
+        self.char_codings = {}
         self.padding_count=0
-        self.unicode= ''
+        self.seq_bin_coding = ''   #for the binary sequence
+        self.unicode = ''
         #decompression process
         self.binary_seq = ''
         self.binary_seq_nopad = ''
 
-    def frequency(self):
-        
+
+    def frequency(self):   
         """ 
         This method calculates the frequency of each character in the sequence
         and stores it in a dictionary
@@ -129,9 +128,8 @@ class HuffmanTree:
 
     def char_codes(self, node: HuffmanNode, bins=''):
 
-        """ A method to create character's binary code according to its path in the Huffman 
-            binary tree. Each character will have a binary code as a value in class's 
-            dictionary char_codings
+        """ A method to create character's binary code according to its path in the Huffman binary tree.
+            Each character will have a binary code as a value in class's dictionary "char_codings"
         Args:
             node:TreeNode: root of the tree
             bins:str: current binary code- empty by default
@@ -178,8 +176,9 @@ class HuffmanTree:
         while len(seq_bin) % 8 != 0:
             seq_bin = seq_bin + '0'
             padding += 1
-
         self.padding_count = padding
+        # Adding padding information to the dictionary of characters (important for decompression)
+        self.char_codings["padding_count"]= self.padding_count
         return seq_bin
 
 
@@ -194,20 +193,24 @@ class HuffmanTree:
             bin_code = int(byte, 2)
             self.unicode += chr(bin_code)
 
-
-    ####Decompression section####
     
-    def get_binary_from_unicode(self):
+    def get_binary_from_unicode(self, unicode:str, rebuilder:dict):
         
-        """ A method that gets the binary sequence from unicode """
+        """ 
+        A method that gets the binary sequence from unicode
+        Args:
+            unicode:str: unicode sequence to be transformed to binary
+            rebuilder:dict: the rebuilder dict that contains informations about
+            character encodings and especially paddings for removal
+        """
 
         # Coverting unicode sequence to binary sequence
-        for char in self.unicode:
+        for char in unicode:
             ord_char = ord(char)
             self.binary_seq = '' + format(ord_char, '08b')
         # Padding removal
-        self.binary_seq_nopad = self.binary_seq[:-self.padding_count]
-
+        pads = rebuilder["padding_count"]   
+        self.binary_seq_nopad = self.binary_seq[:-pads]
 
 
     def decompression(self, rebuilder:dict):

@@ -67,9 +67,10 @@ class Controller:
         This method helps the step by step Huffman compression by calling all steps in order to be
         exploited later.
         Returns:
-              (tree_bin, binary_no_pad, binary_with_padding, unicode):tuple: tree as string,
-              Binary sequence without padding, with padding (if needed) and the final
-              unicode sequence of Huffman's compression
+              (tree_bin, binary_no_pad, binary_with_padding, unicode, rebuilder):tuple: tree as string,
+              Binary sequence without padding, with padding (if needed), the final unicode sequence
+              of Huffman's compression and finally the rebuilder (dict) for each character path used 
+              (saved for decompression use)
               
         """
         # Initialization
@@ -81,6 +82,7 @@ class Controller:
 
         # Binary
         self.huff.char_codes(tree)
+        rebuilder = self.huff.char_codings #will be important for decompression
         self.huff.sequence_to_binary()    
         binary_no_pad=self.huff.seq_bin_coding 
     
@@ -90,10 +92,10 @@ class Controller:
         self.huff.binary_to_unicode()
  
         unicode = self.huff.unicode
-        return (tree_bin, binary_no_pad, binary_with_padding, unicode)
+        return (tree_bin, binary_no_pad, binary_with_padding, unicode, rebuilder)
 
 
-    def huffman_decompression_steppers(self, rebuilder):
+    def huffman_decompression_steppers(self, rebuilder: dict):
         """
         This method helps the step by step Huffman decompression
         Args:
@@ -105,15 +107,15 @@ class Controller:
               
         """
         # Initialization
-        self.huff = HuffmanTree(self.sequence)
-        # stocking unicode in class's property str
-        self.unicode_seq = self.huff.unicode
-        
+        self.huff = HuffmanTree("")     
         # Binary sequence processing         
-        self.huff.get_binary_from_unicode()
-        # Binary sequence pad+ no pad       
+        self.huff.get_binary_from_unicode(self.unicode_seq, rebuilder)
+        # Binary sequence pad    
         bins_pad = self.huff.binary_seq
+        # Binary sequence no padding
         bins= self.huff.binary_seq_nopad
+
+        # Original sequence
         binary_to_sequence=self.huff.decompression(rebuilder)
 
         return (bins_pad, bins, binary_to_sequence)

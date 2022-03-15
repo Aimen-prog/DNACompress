@@ -6,6 +6,8 @@
 
 User interface
 """
+import re
+import ast
 import os
 from tkinter import Tk
 from tkinter import ttk
@@ -257,9 +259,7 @@ class View(Tk):
         Asking for doing it in a pedagogical way (step by step) or not (displaying final sequence)
 
         """
-        global original_sequence
-        global bwt_recon_matrix
-        global in_box
+        global original_sequence, bwt_recon_matrix, in_box
 
         # Content of the file or manually entered sequence
         content = self.get_text_or_file()
@@ -268,7 +268,6 @@ class View(Tk):
         
         # step by step decryption
         ask_question = askquestion('Bwt decryption', 'Would you like to go step by step ?')
-        
 
         # Getting bwt decryption resulting sequence for the non pedagogic way
         original_sequence= self.controller.bwt_decryption_steppers()[1]
@@ -300,7 +299,14 @@ class View(Tk):
                 next_text.set('Help')
                 next_button.configure(command=lambda:self.possible_reasons_bwt())
 
-    def get_next_decryption(self, inbox:str): 
+    def get_next_decryption(self, inbox:str):
+        
+        """ 
+        Method to get the next steps of decryption process of BWT when clicking on next button
+        Args:
+            inbox:str: the informations used for the text box (steps and/or final sequence)
+
+        """
         # Getting the sorted reconstruction matrix of decryption
         bwt_recon_matrix= self.controller.bwt_decryption_steppers()[0][1]
         # Next clicks
@@ -324,9 +330,13 @@ class View(Tk):
 
 
     def huffman_compression(self):
-        
+        """ 
+        A method to proceed the Huffman compression process from the input (text or file)
+        Asking for doing it in a pedagogical way (step by step) or not (displaying final sequence)
+
+        """
         # Result will be stocked here in global for next method
-        global huff_unicode 
+        global huff_unicode, rebuilder_str
         # Content of the file or manually entered sequence
         content = self.get_text_or_file()
         # Remove spaces and saving sequence as controller's property
@@ -337,6 +347,9 @@ class View(Tk):
 
         # Getting result of Huffman compression for the non pedagogic way
         huff_unicode= self.controller.huffman_compression_steppers()[3]
+        # Getting paths dict to be saved with unicode
+        rebuilder = self.controller.huffman_compression_steppers()[4]
+        rebuilder_str = str(rebuilder)
     
         if ask_question == 'yes':
             # Getting the tree as a str from controller
@@ -352,9 +365,9 @@ class View(Tk):
                 self.popup('Huffmann compression')
                 text = 'The unicode resulted from the Huffmann compression is:\n' + huff_unicode
                 self.insert_in_text_box(text)
-                # Saving process when choosing to get final sequence directly
+                # Saving process when choosing to get final sequence directly (save final sequence and paths)
                 next_text.set('Save')
-                next_button.configure(command= lambda : self.save_results(huff_unicode))
+                next_button.configure(command= lambda : self.save_results(huff_unicode,rebuilder_str))
                 # Coloring final Huffmann unicode
                 popup_text_box.tag_config("start", foreground="red")
                 popup_text_box.tag_add("start", "2.0", END)
@@ -364,7 +377,14 @@ class View(Tk):
                 next_text.set('')
 
 
-    def get_next_huff(self, inbox:str): 
+    def get_next_huff(self, inbox:str):
+        
+        """ 
+        Method to get the next steps of Huffman compression when clicking on next button
+        Args:
+            inbox:str: the informations used for the text box (steps and/or final result)
+
+        """
         # Getting binary code with potential padding from Huffman compression: the pedagogic way
         huff_binary_no_pad = self.controller.huffman_compression_steppers()[1]        
         huff_binary_pad = self.controller.huffman_compression_steppers()[2]       
@@ -372,66 +392,65 @@ class View(Tk):
         inbox +='\n\nStep 2: The corresponding binary sequence with no padding:\n' + huff_binary_no_pad + \
             "\n\nStep 3: Binary sequence after possible padding addition :\n" + huff_binary_pad +\
                 '\n\nStep 4: Translating to unicode (final result):\n' + huff_unicode
-        self.insert_in_text_box(inbox)            
-        # Saving after the step by step method
+        self.insert_in_text_box(inbox)      
+        # Saving paths + final result after the step by step method
         next_text.set('Save')
-        next_button.configure(command= lambda : self.save_results(huff_unicode))
+        next_button.configure(command= lambda : self.save_results(huff_unicode,rebuilder_str))
         
         
     def huffman_decompression(self):
-        # Content of the file or manually entered sequence
-        content = self.get_text_or_file()
-        
-        # Remove spaces and saving sequence as controller's property 
-        self.controller.sequence = content.strip()
-        
-        # step by step Huffman compression
-        ask_question = askquestion('Huffman decompression', 'Would you like to go step by step ?')
+        """ 
+        A method to proceed the Huffman decompression process from the input (text or file)
+        Doing it in a pedagogical way (step by step)
 
-        # Getting result of Huffman decompression for the non pedagogic way (final result)
-        origin_sequence= self.controller.huffman_decompression_steppers(rebuilder)[3]
+        """
+        # Unicode entered manually stocked in controller's property
+        self.controller.unicode_seq = self.get_input()
 
+        # Content of the file:
+        # This content need to have an encoder dict as str (paths of character) in the first line
+        self.open_and_get_file()
+        content = self.sequence
+        self.controller.unicode_seq=content.strip()
 
-        if ask_question == 'yes':
-            print("yes")
+        # Extracting only the dict (as str) from the contener
+        found = re.search('{(.+?)}', content).group(1)
+        content_found= "{" + found + "}"
+        # Get dict as str from first line, and reconverting it into real str
+        rebuilder_dict = ast.literal_eval(content_found)
+        # Getting results of Huffman decompression
+        seq_pad= self.controller.huffman_decompression_steppers(rebuilder_dict)[0]
+        seq_no_pad= self.controller.huffman_decompression_steppers(rebuilder_dict)[1]
+        origin_sequence= self.controller.huffman_decompression_steppers(rebuilder_dict)[2]
 
-        else:  #only final result
-            try :
-                self.popup('Huffman decompression')
-                text = 'The sequence after the Huffman decompression is:\n' + origin_sequence
-                self.insert_in_text_box(text)
+        try :
+            self.popup('Huffman decompression')
+            text = 'Step 1: Getting binary sequence with potential padding:\n' + seq_pad + '\n' +\
+                '\nStep 2: Removal of potential padding:\n' + seq_no_pad + '\n' +\
+                '\nThe sequence after the Huffman decompression is:\n' + origin_sequence
+            self.insert_in_text_box(text)
+            # Saving process when choosing to get final sequence directly
+            next_text.set('Save')
+            next_button.configure(command= lambda : self.save_results(origin_sequence))
 
-                # Saving process when choosing to get final sequence directly
-                next_text.set('Save')
-                next_button.configure(command= lambda : self.save_results(origin_sequence))
-
-                #Error message
-            except BaseException:
-                self.insert_in_text_box("An Error has occured, please try again!")
-                next_text.set('')
-
-
-    def get_next_huff_decomp(self, inbox:str):
-        pass
-
-
-
-TODO: In huffmann compression need to save char codings also
-
-
+        #Error message
+        except BaseException:
+            self.insert_in_text_box("An Error has occured, please try again!")
+            next_text.set('')
 
 
-
-    def save_results (self, seq: str):
+    def save_results (self, seq: str, dict_str:str = ""):
         """ 
         Method to save the results of each algorithm
 
         Args:
             seq:str: The result to to be saved in a file
+            dict_str:str:optional, is the dictionnary of paths but as str to be stucked at first line
+            of .txt file (special to huffman compression)
         """
         file = asksaveasfile(initialdir=os.getcwd(), title="Select File", mode='w', defaultextension='.txt')
-        with open(file.name, 'w') as f:
-            f.write(seq)
+        with open(file.name, 'a') as f:
+            f.write(dict_str + '\n' + seq)
         messagebox.showinfo('Done', 'File saved successfully!')
 
 
