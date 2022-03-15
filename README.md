@@ -9,12 +9,17 @@ A DNA compression tool using Burrows-Wheeler and Huffman algorithms.
 <br>
 2) Once sequence selected, user can choose one of the 4 programs:
 <br>
-section <b>Encryption</b> : 
-BWT encryption : 
-Huffman compression :
-section <b>Deryption</b> : 
-BWT decryption : 
-Huffman decompression :
+-<b>Encryption</b> section: 
+
+i. BWT encryption : Converts a DNA sequence to Burrows-Wheeler format (a transform).
+ii. Huffman compression : Compresses a sequence by passing to Byte format. A resulting BWT sequence can be used for full zip.
+
+Both buttons propose either pedagogical (step by step) processing or getting final result directly. They also propose to save results. The huffman compression saves the final result but also patterns (dictionnary of binary sequence and informations ) crucial for decompression process below.
+
+- <b>Decryption</b> section: 
+i. BWT decryption : Takes the transform of Burrows-Wheeler and reconstructs the original DNA sequence from it
+ii. Huffman decompression : Decompresses the unicode ( resulted from compression ) to give the original sequence ( sequence before huffman compression process)
+
 
 
 # How to execute
