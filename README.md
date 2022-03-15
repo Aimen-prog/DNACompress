@@ -6,7 +6,6 @@ A DNA compression tool using Burrows-Wheeler and Huffman algorithms.
 
 # Content
 1) User enters a DNA sequence manually by writing in the text box in the menu of the program or by selecting a '.txt' file thanks to the bar menu above or by pressing ctrl + o using the keyboard
-<br>
 2) Once sequence selected, user can choose one of the 4 programs:
 <br>
 -<b>Encryption</b> section: 
