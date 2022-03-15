@@ -111,10 +111,10 @@ class Controller:
         self.huff = HuffmanTree("")     
         # Binary sequence processing         
         self.huff.get_binary_from_unicode(self.unicode_seq, rebuilder)
-        
+
         self.huff.sequence_to_binary()
         # Binary sequence pad    
-        bins_pad = self.huff.binary_seq
+        bins_pad = self.huff.binary_seq_pad
         # Binary sequence no padding
         bins= self.huff.binary_seq_nopad
 

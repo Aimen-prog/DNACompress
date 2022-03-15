@@ -64,6 +64,7 @@ class HuffmanTree:
         self.unicode = ''
         #decompression process
         self.binary_seq = ''
+        self.binary_seq =''
         self.binary_seq_nopad = ''
 
 
@@ -152,11 +153,13 @@ class HuffmanTree:
 
         """A method that transforms a whole sequence into a binary sequence according to 
         the path of each character of that sequence
+        Also stores sequence as binary as preparation for the decompression process.
         """
 
         for char in self.sequence.upper():
             if char in self.char_codings.keys():
                 self.seq_bin_coding += self.char_codings[char]
+        self.char_codings["binary"] = self.seq_bin_coding
 
     def padding_to_binary(self, seq_bin : str):
 
@@ -207,10 +210,12 @@ class HuffmanTree:
             ord_char = ord(char)
             self.binary_seq = '' + format(ord_char, '08b')
         # Padding removal
-        pads = rebuilder["padding_count"]
+        pads = rebuilder["padding_count"]      
+        binary = rebuilder["binary"]
+        self.binary_seq_pad = binary
         # Only if there are paddings, if not do nothing!
         if pads !=0 :
-            self.binary_seq_nopad = self.binary_seq[:-pads]
+            self.binary_seq_nopad = binary[:-pads]
 
     def decompression(self, rebuilder:dict):
         """ A method that decompresses the unicode sequence into the initial sequence 
@@ -221,13 +226,19 @@ class HuffmanTree:
         Returns:
             str: decompressed (initial) sequence
 
-        """       
-        # Rebuilding the initial DNA sequence and returning it
-        sequence=''
-        for bins in self.binary_seq_nopad:
-            path = "" + bins
-            for key, value in rebuilder.items():
-                if value == path:
-                    sequence += key
-                    path = ""
+        """
+        
+        rebuilder_keys = list(rebuilder.keys())
+        rebuilder_values = list(rebuilder.values())
+
+        path = ''
+        sequence = ''
+
+        for bins in self.binary_seq_pad:
+            path += bins
+            if path in rebuilder_values:
+                index = rebuilder_values.index(path)
+                path = ''
+                sequence = sequence + rebuilder_keys[index]
+     
         return sequence
