@@ -60,9 +60,12 @@ class HuffmanTree:
         self.sequence=sequence
         self.dict_frequency = self.frequency()
         self.char_codings={}
-        self.seq_bin_coding = ''
+        self.seq_bin_coding = ''   #for the binary sequence
         self.padding_count=0
         self.unicode= ''
+        #decompression process
+        self.binary_seq = ''
+        self.binary_seq_nopad = ''
 
     def frequency(self):
         
@@ -192,6 +195,21 @@ class HuffmanTree:
             self.unicode += chr(bin_code)
 
 
+    ####Decompression section####
+    
+    def get_binary_from_unicode(self):
+        
+        """ A method that gets the binary sequence from unicode """
+
+        # Coverting unicode sequence to binary sequence
+        for char in self.unicode:
+            ord_char = ord(char)
+            self.binary_seq = '' + format(ord_char, '08b')
+        # Padding removal
+        self.binary_seq_nopad = self.binary_seq[:-self.padding_count]
+
+
+
     def decompression(self, rebuilder:dict):
         """ A method that decompresses the unicode sequence into the initial sequence 
         
@@ -201,18 +219,10 @@ class HuffmanTree:
         Returns:
             str: decompressed (initial) sequence
 
-        """ 
-        # Coverting unicode sequence to binary sequence
-        for char in self.unicode:
-            ord_char = ord(char)
-            binary_seq = '' + format(ord_char, '08b')
-
-        # Padding removal
-        binary_seq = binary_seq[:-self.padding_count]
-        
+        """       
         # Rebuilding the initial DNA sequence and returning it
         sequence=''
-        for bins in binary_seq:
+        for bins in self.binary_seq_nopad:
             path = "" + bins
             for key, value in rebuilder.items():
                 if value == path:

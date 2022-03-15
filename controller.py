@@ -19,6 +19,7 @@ class Controller:
         self.sequence=''
         self.count=0
         self.huff = None
+        self.unicode_seq=''
 
     def start_view(self):
         """
@@ -87,11 +88,36 @@ class Controller:
         self.huff.padding_to_binary(self.huff.seq_bin_coding)
         binary_with_padding= self.huff.padding_to_binary(self.huff.seq_bin_coding)
         self.huff.binary_to_unicode()
-
-
-        char_codes = self.huff.char_codings     
+ 
         unicode = self.huff.unicode
         return (tree_bin, binary_no_pad, binary_with_padding, unicode)
+
+
+    def huffman_decompression_steppers(self, rebuilder):
+        """
+        This method helps the step by step Huffman decompression
+        Args:
+            rebuilder:dict: A dictionnary with the path of each character as value, used to help rebuilding
+            the sequence of origin
+        Returns:
+            (bins_pad,bins,binary_to_sequence):tuple: binary sequence of the unicode with padding,without paddings
+            and the original sequence from unicode
+              
+        """
+        # Initialization
+        self.huff = HuffmanTree(self.sequence)
+        # stocking unicode in class's property str
+        self.unicode_seq = self.huff.unicode
+        
+        # Binary sequence processing         
+        self.huff.get_binary_from_unicode()
+        # Binary sequence pad+ no pad       
+        bins_pad = self.huff.binary_seq
+        bins= self.huff.binary_seq_nopad
+        binary_to_sequence=self.huff.decompression(rebuilder)
+
+        return (bins_pad, bins, binary_to_sequence)
+
 
 
            

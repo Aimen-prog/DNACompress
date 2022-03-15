@@ -342,8 +342,7 @@ class View(Tk):
             # Getting the tree as a str from controller
             huff_tree= self.controller.huffman_compression_steppers()[0]
             in_box = 'Recuperating the entered sequence..\n' + self.controller.sequence +\
-                '\nStep 1: Building Huffman binary tree:\n\n' + huff_tree
-               
+                '\nStep 1: Building Huffman binary tree:\n\n' + huff_tree             
             self.popup('Huffmann Compression')
             self.insert_in_text_box(in_box)
             next_button.configure(command=lambda:self.get_next_huff(in_box))
@@ -380,33 +379,44 @@ class View(Tk):
         
         
     def huffman_decompression(self):
-        print("compress")
+        # Content of the file or manually entered sequence
+        content = self.get_text_or_file()
+        
+        # Remove spaces and saving sequence as controller's property 
+        self.controller.sequence = content.strip()
+        
+        # step by step Huffman compression
+        ask_question = askquestion('Huffman decompression', 'Would you like to go step by step ?')
+
+        # Getting result of Huffman decompression for the non pedagogic way (final result)
+        origin_sequence= self.controller.huffman_decompression_steppers(rebuilder)[3]
+
+
+        if ask_question == 'yes':
+            print("yes")
+
+        else:  #only final result
+            try :
+                self.popup('Huffman decompression')
+                text = 'The sequence after the Huffman decompression is:\n' + origin_sequence
+                self.insert_in_text_box(text)
+
+                # Saving process when choosing to get final sequence directly
+                next_text.set('Save')
+                next_button.configure(command= lambda : self.save_results(origin_sequence))
+
+                #Error message
+            except BaseException:
+                self.insert_in_text_box("An Error has occured, please try again!")
+                next_text.set('')
+
+
+    def get_next_huff_decomp(self, inbox:str):
+        pass
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+TODO: In huffmann compression need to save char codings also
 
 
 
