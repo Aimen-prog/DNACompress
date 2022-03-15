@@ -8,7 +8,7 @@ A DNA compression tool using Burrows-Wheeler and Huffman algorithms.
 1) User enters a DNA sequence manually by writing in the text box in the menu of the program or by selecting a '.txt' file thanks to the bar menu above or by pressing ctrl + o using the keyboard
 2) Once sequence selected, user can choose one of the following 4 programs:
 
--<b>Encryption</b> section: 
+- <b>Encryption</b> section: 
 
 i. BWT encryption : Converts a DNA sequence to Burrows-Wheeler format (a transform).
 ii. Huffman compression : Compresses a sequence by passing to Byte format. A resulting BWT sequence can be used for full zip.
