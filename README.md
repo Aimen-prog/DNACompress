@@ -22,7 +22,9 @@ i. BWT decryption : Takes the transform of Burrows-Wheeler and reconstructs the 
 <br>
 ii. Huffman decompression : Decompresses the unicode (resulted from compression) to give the original sequence (sequence before huffman compression process). <b>Only</b> a file resulting from the Huffman compression will be necessary as it contains path to orientate the identification of the unicode sequence and there for for the decompression.
 <br>BWT decryption buttons propose either pedagogical (step by step) processing or getting final result directly while Huffman decryption does the integral steps. These two also propose to save final results in .txt files
+
 <br>
+
 <b>caution</b>: The entry for Huffman compression  and BWT (encryption + decryption) should be either text or file, otherwise both will be joined to make one unique sequence. If you aren't not sure press button reset, re-enter sequence and re-execute.
 
 # How to execute
@@ -36,3 +38,5 @@ python3 controller.py
 # Author
 CHERIF Aimen
 
+# License
+Open source
