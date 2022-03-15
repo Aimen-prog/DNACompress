@@ -25,7 +25,7 @@ ii. Huffman decompression : Decompresses the unicode (resulted from compression)
 
 <br>
 
-<b>caution</b>: The entry for Huffman compression  and BWT (encryption + decryption) should be either text or file, otherwise both will be joined to make one unique sequence. If you aren't not sure press button reset, re-enter sequence and re-execute.
+<b>caution</b>: The entry for Huffman compression  and BWT (encryption + decryption) should be either text or file, otherwise both will be joined to make one unique sequence. If not sure press button reset, re-enter sequence and re-execute.
 
 # How to execute
 This Gui program is executable like this:
