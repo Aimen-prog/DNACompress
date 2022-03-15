@@ -105,7 +105,7 @@ class Controller:
         Returns:
             (bins_pad,bins,binary_to_sequence):tuple: binary sequence of the unicode with padding,without paddings
             and the original sequence from unicode
-              
+
         """
         # Initialization
         self.huff = HuffmanTree("")     
