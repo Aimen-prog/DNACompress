@@ -20,8 +20,9 @@ Both of these buttons propose either pedagogical (step by step) processing or ge
 
 i. BWT decryption : Takes the transform of Burrows-Wheeler and reconstructs the original DNA sequence from it.
 <br>
-ii. Huffman decompression : Decompresses the unicode (resulted from compression) to give the original sequence (sequence before huffman compression process). <b>Only</b> a file resulting from the Huffman compression will be necessary (no need to enter sequence manually) as it contains path to orientate the identification of the unicode sequence and therefore for the decompression. The file selection will be directly when clicking the button.
-<br>BWT decryption buttons propose either pedagogical (step by step) processing or getting final result directly while Huffman decryption does the integral steps. These two also propose to save final results in .txt files
+ii. Huffman decompression : Decompresses the unicode (resulted from compression) to give the original sequence (sequence before Huffman compression process). <b>Only</b> a file resulting from the Huffman compression will be necessary (no need to enter sequence manually) as it contains path to orientate the identification of the unicode sequence and therefore for the decompression. The file selection will be directly when clicking the button.
+<br>
+BWT decryption button propose either pedagogical (step by step) processing or getting directly final result only, while Huffman decryption does the integrality of the steps. These two also propose to save final results in .txt files.
 
 <br>
 
