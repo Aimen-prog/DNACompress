@@ -27,6 +27,8 @@ BWT decryption button propose either pedagogical (step by step) processing or ge
 <br>
 
 <b>caution</b>: For the entry of BWT and Huffman (except decompression where input is directly from button), if a .txt file is selected, the text box is disabled thus not considered, to make only one way of entry not both. The button reset give you the possibility to clear entries and re-enter sequence before executing.
+<br>
+<b> important </b> Please restart program after each program use, especially after using step by step mod
 
 # How to execute
 This Gui program is executable like this:
