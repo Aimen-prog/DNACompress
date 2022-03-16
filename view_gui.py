@@ -461,7 +461,7 @@ class View(Tk):
         text_box.delete(1.0, END)
         self.controller.sequence=""
         self.file = None
-        if self.file is None :
+        if self.file is not None :
             self.input_deselection()
             
 
