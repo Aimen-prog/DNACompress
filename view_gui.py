@@ -87,13 +87,13 @@ class View(Tk):
         """
         This method creates the five buttons of the home page
             
-        """            
+        """     
         Button(self, text="BWT encryption",command=self.bwt_encryption, width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=6,column=0,padx=70 ,sticky='w')
         Button(self, text="Huffman compression",command=self.huffman_compression, width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=6,padx=70,sticky='e')
-        
+
         Button(self, text="BWT decryption",command=self.bwt_decryption,width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=10,column=0,padx=70 ,sticky='w')
         Button(self, text="Huffman decompression", command=self.huffman_decompression, width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=10,padx=70,sticky='e')
-        
+   
         Button(self, text="Reset", command=self.reset_entries, width = 20,height=2,bg='SlateBlue4', fg='white').grid(row=11, pady=15)
 
 
@@ -137,11 +137,11 @@ class View(Tk):
             return self.sequence
         else :
             return self.get_input()
-            
+
 
     def popup(self, title:str):
-        """ A method that creates a toplevel (popup) window
-
+        """ 
+        A method that creates a toplevel (popup) window
         Args:
             title:str: the title of the toplevel window
         """
@@ -208,14 +208,17 @@ class View(Tk):
             # Coloring final BWT sequence
             popup_text_box.tag_config("start", foreground="red")
             popup_text_box.tag_add("start", "2.0", END)
-
+            self.file = None
+            self.sequence = ''
+            self.controller.sequence = ''
+            self.text_box_content=''
+            
 
     def get_next(self, inbox:str):
         """ 
         Method to get the next steps of BWT when clicking on next button
         Args:
             inbox:str: the informations used for the text box (steps and/or final bwt sequence)
-
         """
         # Getting the unsorted matrix for 1st step
         bwt_matrix = results_bwt[0]
@@ -291,13 +294,21 @@ class View(Tk):
                 next_button.configure(command= lambda : self.save_results(original_sequence.strip()[: -1]))
                 # Coloring final sequence
                 popup_text_box.tag_config("start", foreground="red")
-                popup_text_box.tag_add("start", "5.0", END)
-                
-                #Error message
+                popup_text_box.tag_add("start", "5.0", END)    
+                self.file = None
+                self.sequence = ''
+                self.controller.sequence = ''
+                self.text_box_content=''            
+
+            #Error message
             except BaseException:
                 self.insert_in_text_box("An Error has occured, please try again!")
                 next_text.set('Help')
                 next_button.configure(command=lambda:self.possible_reasons_bwt())
+                self.file = None
+                self.sequence = ''
+                self.controller.sequence = ''
+                self.text_box_content=''
 
     def get_next_decryption(self, inbox:str):
         
@@ -319,9 +330,7 @@ class View(Tk):
         except BaseException:
 
             inbox += popup_text_box.get("1.0", END) + \
-                '\nStep 2: Getting the sequence ending with $ symbol:' + \
-                    '\n'+ original_sequence + "\n==>The final sequence is:\n" +\
-                        original_sequence.strip()[: -1]
+                '\nStep 2: Getting the sequence ending with $ symbol:' + '\n'+ original_sequence + "\n==>The final sequence is:\n" + original_sequence.strip()[: -1]
             self.insert_in_text_box(inbox)
             
             # Saving after the step by step method
@@ -371,6 +380,10 @@ class View(Tk):
                 # Coloring final Huffmann unicode
                 popup_text_box.tag_config("start", foreground="red")
                 popup_text_box.tag_add("start", "2.0", END)
+                self.file = None
+                self.sequence = ''
+                self.controller.sequence = ''
+                self.text_box_content=''  
 
             except BaseException:
                 self.insert_in_text_box("An Error has occured, please try again!")
@@ -437,6 +450,10 @@ class View(Tk):
         except BaseException:
             self.insert_in_text_box("An Error has occured, please try again!")
             next_text.set('')
+            self.file = None
+            self.sequence = ''
+            self.controller.sequence = ''
+            self.text_box_content=''  
 
 
     def save_results (self, seq: str, dict_str:str = ""):
@@ -463,7 +480,6 @@ class View(Tk):
         self.file = None
         if self.file is not None :
             self.input_deselection()
-            
 
     def possible_reasons_bwt(self):
         """ 
@@ -471,7 +487,7 @@ class View(Tk):
         process
         """
         messagebox.showinfo("Possible failure reasons", "- Empty input/file \n- Not a BWT format \n ($ symbol missing)")
-        
+
     def quit_secure(self):
         """ 
         Method quit the program properly
@@ -489,15 +505,3 @@ class View(Tk):
     def main(self):
         print("[View] main")
         self.mainloop()
-
-
-
-
-
-
-
-
-
-
-
-
