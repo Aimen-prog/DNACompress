@@ -35,7 +35,7 @@ class View(Tk):
     def create_space(self):
         """
         This method creates the space (image and labels) of the home page
-        """    
+        """
 
         logo = PhotoImage(file="DNACompress_logo.png")
         label = Label(self,image=logo,bg="white smoke")
@@ -121,6 +121,7 @@ class View(Tk):
                                               filetypes=(("Text Files","*.txt"),))
         if self.file:
             messagebox.showinfo("Selected file", "Successfully selected: %s"%(self.file))
+            text_box.configure(state="disabled")
             with open(self.file, 'r') as f:
                 line = f.read()
                 for char in line:
@@ -456,6 +457,7 @@ class View(Tk):
         """ 
         Method to help the user reset entries file/text box content
         """
+        text_box.configure(state="normal")
         text_box.delete(1.0, END)
         self.controller.sequence=""
         self.file = None
