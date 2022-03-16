@@ -26,7 +26,7 @@ BWT decryption button propose either pedagogical (step by step) processing or ge
 
 <br>
 
-<b>caution</b>: The entry for Huffman compression  and BWT (encryption + decryption) should be either text or file, otherwise (if a text is written in text box and after that a file is selected) both will be joined to make a one and unique sequence. If not sure press button reset, re-enter sequence and re-execute.
+<b>caution</b>: For the entry of BWT and Huffman (except decompression where input is directly from button), if a .txt file is selected, the text box is disabled thus not considered, to make only one way of entry not both. The button reset give you the possibility to clear entries and re-enter sequence before executing.
 
 # How to execute
 This Gui program is executable like this:
